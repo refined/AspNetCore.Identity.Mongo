@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Identity;
 namespace AspNetCore.Identity.Mongo.Stores
 {
 	public class UserStore<TUser, TRole> :
-		IUserClaimStore<TUser>,
-		IUserLoginStore<TUser>,
+		//IUserClaimStore<TUser>,
+		//IUserLoginStore<TUser>,
 		IUserRoleStore<TUser>,
 		IUserPasswordStore<TUser>,
 		IUserSecurityStampStore<TUser>,
@@ -21,8 +21,8 @@ namespace AspNetCore.Identity.Mongo.Stores
 		IQueryableUserStore<TUser>,
 		IUserTwoFactorStore<TUser>,
 		IUserLockoutStore<TUser>,
-		IUserAuthenticatorKeyStore<TUser>,
-		IUserAuthenticationTokenStore<TUser>,
+		//IUserAuthenticatorKeyStore<TUser>,
+		//IUserAuthenticationTokenStore<TUser>,
 		IUserTwoFactorRecoveryCodeStore<TUser> where TUser : MongoUser
 		where TRole : MongoRole
 	{
@@ -39,61 +39,7 @@ namespace AspNetCore.Identity.Mongo.Stores
 		    _normalizer = normalizer;
 		}
 
-		public IQueryable<TUser> Users => _userCollection.GetAllAsync().Result.AsQueryable();
-
-		public async Task SetTokenAsync(TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			if (user.Tokens == null) user.Tokens = new List<IdentityUserToken<string>>();
-
-			var token = user.Tokens.FirstOrDefault(x => x.LoginProvider == loginProvider && x.Name == name);
-
-			if (token == null)
-			{
-				token = new IdentityUserToken<string> {LoginProvider = loginProvider, Name = name, Value = value};
-			    user.Tokens.Add(token);
-			}
-			else
-			{
-				token.Value = value;
-			}
-
-		    await _userCollection.UpdateAsync(user);
-		}
-
-		public Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			if (user?.Tokens == null) return Task.CompletedTask;
-
-		    user.Tokens.RemoveAll(x => x.LoginProvider == loginProvider && x.Name == name);
-
-			return _userCollection.UpdateAsync(user);
-		}
-
-		public Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			return Task.FromResult(user?.Tokens?.FirstOrDefault(x => x.LoginProvider == loginProvider && x.Name == name)?.Value);
-		}
-
-		public async Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			return (await _userCollection.FindByIdAsync(user.Id))?.AuthenticatorKey ?? user.AuthenticatorKey;
-		}
-
-		public Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			user.AuthenticatorKey = key;
-			return _userCollection.UpdateAsync(user);
-		}
+		public IQueryable<TUser> Users => _userCollection.GetAsQueryable();
 
 		public async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken)
 		{
@@ -144,55 +90,6 @@ namespace AspNetCore.Identity.Mongo.Stores
 			return IdentityResult.Success;
 		}
 
-		public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			if (user.Claims == null) user.Claims = new List<IdentityUserClaim<string>>();
-
-			user.Claims.AddRange(claims.Select(claim => new IdentityUserClaim<string>()
-			{
-                ClaimType = claim.Type,
-                ClaimValue = claim.Value
-			}));
-
-		    return _userCollection.UpdateAsync(user);
-		}
-
-		public Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			user?.Claims?.RemoveAll(x => x.ClaimType == claim.Type);
-
-		    user?.Claims?.Add(new IdentityUserClaim<string>()
-		    {
-                ClaimType = newClaim.Type,
-                ClaimValue = newClaim.Value
-		    });
-            
-		    return _userCollection.UpdateAsync(user);
-		}
-
-		public Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			foreach (var claim in claims)
-			{
-				user?.Claims?.RemoveAll(x => x.ClaimType == claim.Type);
-			}
-
-		    return _userCollection.UpdateAsync(user);
-		}
-
-		public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			return (await _userCollection.FindUsersByClaimAsync(claim.Type, claim.Value)).ToList();
-		}
-
 		public Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken)
 		{
 		    cancellationToken.ThrowIfCancellationRequested();
@@ -212,14 +109,6 @@ namespace AspNetCore.Identity.Mongo.Stores
 		    cancellationToken.ThrowIfCancellationRequested();
 
 			return Task.FromResult(user.UserName);
-		}
-
-		public async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			var dbUser = await _userCollection.FindByIdAsync(user.Id);
-			return dbUser?.Claims?.Select(x => new Claim(x.ClaimType, x.ClaimValue))?.ToList() ?? new List<Claim>();
 		}
 
 		public Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken)
@@ -344,49 +233,6 @@ namespace AspNetCore.Identity.Mongo.Stores
 
 			user.LockoutEnabled = enabled;
 		    return _userCollection.UpdateAsync(user);
-		}
-
-        public Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			if (user.Logins == null) user.Logins = new List<IdentityUserLogin<string>>();
-
-			user.Logins.Add(new IdentityUserLogin<string>
-			{
-				UserId = user.Id,
-				LoginProvider = login.LoginProvider,
-				ProviderDisplayName = login.ProviderDisplayName,
-				ProviderKey = login.ProviderKey
-			});
-
-		    return _userCollection.UpdateAsync(user);
-		}
-
-		public async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			var dbUser = await _userCollection.FindByIdAsync(user.Id);
-			user.Logins.RemoveAll(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
-			dbUser.Logins.RemoveAll(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
-
-		    await _userCollection.UpdateAsync(user);
-		}
-
-		public async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			return await _userCollection.FindByLoginAsync(loginProvider, providerKey);
-		}
-
-		public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken)
-		{
-		    cancellationToken.ThrowIfCancellationRequested();
-
-			var dbUser = await _userCollection.FindByIdAsync(user.Id);
-			return dbUser?.Logins?.Select(x =>new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName))?.ToList() ?? new List<UserLoginInfo>();
 		}
 
 		public Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken)

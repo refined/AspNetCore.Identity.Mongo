@@ -2,27 +2,21 @@
 
 namespace AspNetCore.Identity.Mongo.Model
 {
-	public class IdentityUserLogin
-	{
-		public IdentityUserLogin()
-		{
-		}
+	public class IdentityUserLogin : IdentityUserLogin<string>
+    {
+        /// <summary>
+        /// Gets or sets the login provider for the login (e.g. facebook, google)
+        /// </summary>
+        public override string LoginProvider { get; set; }
 
-		public IdentityUserLogin(string loginProvider, string providerKey, string providerDisplayName)
-		{
-			LoginProvider = loginProvider;
-			ProviderDisplayName = providerDisplayName;
-			ProviderKey = providerKey;
-		}
+        /// <summary>
+        /// Gets or sets the unique provider identifier for this login.
+        /// </summary>
+        public override string ProviderKey { get; set; }
 
-		public string UserId { get; set; }
-		public string LoginProvider { get; set; }
-		public string ProviderDisplayName { get; set; }
-		public string ProviderKey { get; set; }
-
-		public UserLoginInfo ToUserLoginInfo()
-		{
-			return new UserLoginInfo(LoginProvider, ProviderKey, ProviderDisplayName);
-		}
-	}
+        /// <summary>
+        /// Gets or sets the friendly name used in a UI for this login.
+        /// </summary>
+        public override string ProviderDisplayName { get; set; }
+    }
 }

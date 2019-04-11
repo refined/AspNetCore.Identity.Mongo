@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
 
@@ -9,10 +10,8 @@ namespace AspNetCore.Identity.Mongo.Collections
 	    Task<TUser> FindByEmailAsync(string normalizedEmail);
 	    Task<TUser> FindByUserNameAsync(string username);
 	    Task<TUser> FindByNormalizedUserNameAsync(string normalizedUserName);
-	    Task<TUser> FindByLoginAsync(string loginProvider, string providerKey);
-	    Task<IEnumerable<TUser>> FindUsersByClaimAsync(string claimType, string claimValue);
 	    Task<IEnumerable<TUser>> FindUsersInRoleAsync(string roleName);
-	    Task<IEnumerable<TUser>> GetAllAsync();
+	    IQueryable<TUser> GetAsQueryable();
 	    Task<TUser> CreateAsync(TUser obj);
 	    Task UpdateAsync(TUser obj);
 	    Task DeleteAsync(TUser obj);

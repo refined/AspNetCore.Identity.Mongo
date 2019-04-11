@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.Mongo.Model;
 using SampleSite.Identity;
 using SampleSite.Mailing;
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +33,7 @@ namespace SampleSite
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddIdentityMongoDbProvider<MaddalenaUser>(mongo =>
+            services.AddIdentityMongoDbProvider<MongoUser, MongoRole>(mongo =>
             {
                 mongo.ConnectionString = ConnectionString;
             });

@@ -2,7 +2,7 @@
 {
 	public class MongoIdentityOptions
 	{
-		public string ConnectionString { get; set; } = "mongodb://localhost/default";
+		public string ConnectionString { get; set; } = "mongodb://localhost/default_db";
         
 	    public string UsersCollection { get; set; } = "Users";
 		

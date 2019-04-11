@@ -9,9 +9,9 @@ namespace AspNetCore.Identity.Mongo.Model
         public MongoUser()
 		{
 			Roles = new List<string>();
-			Claims = new List<IdentityUserClaim<string>>();
-			Logins = new List<IdentityUserLogin<string>>();
-			Tokens = new List<IdentityUserToken<string>>();
+			//Claims = new List<IdentityUserClaim>();
+		    //Logins = new List<IdentityUserLogin>();
+			//Tokens = new List<IdentityUserToken>();
 			RecoveryCodes = new List<TwoFactorRecoveryCode>();
 		}
 
@@ -19,11 +19,11 @@ namespace AspNetCore.Identity.Mongo.Model
 
 		public List<string> Roles { get; set; }
 
-		public List<IdentityUserClaim<string>> Claims { get; set; }
+		//public List<IdentityUserClaim> Claims { get; set; }
 
-		public List<IdentityUserLogin<string>> Logins { get; set; }
+		//public List<IdentityUserLogin> Logins { get; set; }
 
-		public List<IdentityUserToken<string>> Tokens { get; set; }
+		//public List<IdentityUserToken> Tokens { get; set; }
 
 		public List<TwoFactorRecoveryCode> RecoveryCodes { get; set; }
 	}

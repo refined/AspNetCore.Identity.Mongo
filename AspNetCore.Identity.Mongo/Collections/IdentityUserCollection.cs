@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace AspNetCore.Identity.Mongo.Collections
@@ -12,6 +13,12 @@ namespace AspNetCore.Identity.Mongo.Collections
 
         public IdentityUserCollection(string connectionString, string collectionName)
         {
+            BsonClassMap.RegisterClassMap<TUser>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIgnoreExtraElements(true);
+            });
+
             _users = MongoUtil.FromConnectionString<TUser>(connectionString, collectionName);
         }
 
@@ -30,28 +37,16 @@ namespace AspNetCore.Identity.Mongo.Collections
 			return await _users.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
 		}
 
-		public async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey)
-		{
-			return await _users.FirstOrDefaultAsync(u =>
-				u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
-		}
+	    public async Task<IEnumerable<TUser>> FindUsersInRoleAsync(string roleName)
+	    {
+	        var filter = Builders<TUser>.Filter.AnyEq(x => x.Roles, roleName);
+	        var res = await _users.FindAsync(filter);
+	        return res.ToEnumerable();
+	    }
 
-		public async Task<IEnumerable<TUser>> FindUsersByClaimAsync(string claimType, string claimValue)
-		{
-			return await _users.WhereAsync(u => u.Claims.Any(c => c.ClaimType == claimType && c.ClaimValue == claimValue));
-		}
-
-		public async Task<IEnumerable<TUser>> FindUsersInRoleAsync(string roleName)
-		{
-		    var filter = Builders<TUser>.Filter.AnyEq(x => x.Roles, roleName);
-            var res = await _users.FindAsync(filter);
-		    return res.ToEnumerable();
-        }
-
-        public async Task<IEnumerable<TUser>> GetAllAsync()
+        public IQueryable<TUser> GetAsQueryable()
         {
-            var res = await _users.FindAsync(x=>true);
-            return await res.ToListAsync();
+            return _users.AsQueryable();
         }
 
         public async Task<TUser> CreateAsync(TUser obj)

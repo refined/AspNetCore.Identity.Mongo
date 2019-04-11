@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace AspNetCore.Identity.Mongo.Collections
@@ -12,8 +13,15 @@ namespace AspNetCore.Identity.Mongo.Collections
 
 		public IdentityRoleCollection(string connectionString, string collectionName)
 		{
-		    _roles = MongoUtil.FromConnectionString<TRole>(connectionString, collectionName);
-		}
+		    BsonClassMap.RegisterClassMap<TRole>(cm =>
+		    {
+		        cm.AutoMap();
+		        cm.SetIgnoreExtraElements(true);
+		    });
+
+            _roles = MongoUtil.FromConnectionString<TRole>(connectionString, collectionName);
+            //TODO create index
+        }
 
 		public async Task<TRole> FindByNameAsync(string normalizedName)
 		{
