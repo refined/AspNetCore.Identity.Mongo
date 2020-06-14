@@ -6,6 +6,7 @@ using AspNetCore.Identity.Mongo.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Novikov.MongoRepository;
 
 namespace AspNetCore.Identity.Mongo
 {
@@ -64,7 +65,7 @@ namespace AspNetCore.Identity.Mongo
                     
                     // User settings.
                     options.User.AllowedUserNameCharacters =
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+()@./?!#$%^&*_=";
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-@.&_";
 
                     options.SignIn.RequireConfirmedPhoneNumber = settings.RequireConfirmedPhoneNumber;
                     options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultPhoneProvider;

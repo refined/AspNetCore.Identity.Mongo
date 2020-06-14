@@ -1,11 +1,11 @@
-﻿using AspNetCore.Identity.Mongo.Entities;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
+using Novikov.MongoRepository;
 
 namespace AspNetCore.Identity.Mongo
 {

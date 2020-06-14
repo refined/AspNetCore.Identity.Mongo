@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
+using Novikov.MongoRepository;
 
 namespace AspNetCore.Identity.Mongo.Entities
 {
