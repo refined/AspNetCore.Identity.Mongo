@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Identity.Mongo.Tokens
+﻿namespace AspNetCore.Identity.Mongo.Jwt
 {
     public class JwtSettings
     {

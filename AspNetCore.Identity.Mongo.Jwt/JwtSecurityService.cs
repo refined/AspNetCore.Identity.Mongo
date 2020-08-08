@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AspNetCore.Identity.Mongo.Tokens
+namespace AspNetCore.Identity.Mongo.Jwt
 {
     public class JwtSecurityService
     {

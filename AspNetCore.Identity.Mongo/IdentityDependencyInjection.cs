@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using AspNetCore.Identity.Mongo.Entities;
+using AspNetCore.Identity.Mongo.Repository;
 using AspNetCore.Identity.Mongo.Settings;
-using AspNetCore.Identity.Mongo.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,31 +18,6 @@ namespace AspNetCore.Identity.Mongo
                 .AddOptions()
                 .Configure<MongoDbSettings>(configuration.GetSection("MongoDb"))
                 .Configure<IdentitySettings>(configuration.GetSection("IdentitySettings"));
-        }
-
-        public static IdentityCookiesBuilder AddDefaultJwtSetup(this IServiceCollection services, IConfiguration configuration)
-        {
-            return services
-                .AddJwtAuthorization(configuration)
-                .AddAuthentication(o =>
-                {
-                    o.DefaultScheme = IdentityConstants.ApplicationScheme;
-                    o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-                })
-                .AddIdentityCookies(o =>
-                {
-                    o.ApplicationCookie.Configure(c =>
-                    {
-                        c.SlidingExpiration = true;
-                        c.ExpireTimeSpan = TimeSpan.FromDays(1);
-#pragma warning disable 1998
-                        c.Events.OnRedirectToLogin = async context
-                            => context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                        c.Events.OnRedirectToAccessDenied = async context
-                            => context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-#pragma warning restore 1998
-                    });
-                });
         }
 
         public static IdentityBuilder AddIdentitySetup(this IServiceCollection services, IdentitySettings settings)
@@ -68,6 +43,7 @@ namespace AspNetCore.Identity.Mongo
                         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-@.&_";
 
                     options.SignIn.RequireConfirmedPhoneNumber = settings.RequireConfirmedPhoneNumber;
+                    options.SignIn.RequireConfirmedEmail = settings.RequireConfirmedEmail;
                     options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultPhoneProvider;
                     options.Tokens.ChangePhoneNumberTokenProvider = TokenOptions.DefaultPhoneProvider;
                     options.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultEmailProvider;
@@ -83,19 +59,20 @@ namespace AspNetCore.Identity.Mongo
         {
             services.AddIdentitySettings(configuration);
             var identitySettings = configuration.GetSection("IdentitySettings").Get<IdentitySettings>();
-            if (identitySettings.UseJwtTokens)
-            {
-                services.AddDefaultJwtSetup(configuration);
-            }
-            else
-            {
-                services.AddDefaultIdentity<IdentityUserEntity>();
-            }
-           
+            services.AddAuthentication(o =>
+                {
+                    o.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+            .AddIdentityCookies(o => { });
+
             return services
+                .AddRepositories()
+                .AddTransient<IIdentityRepository<IdentityUserEntity>, IdentityUserRepository>()
                 .AddTransient<ILookupNormalizer, UpperInvariantLookupNormalizer>()
                 .AddTransient<IUserStore<IdentityUserEntity>, UserStore>()
-                .AddIdentitySetup(identitySettings);
+                .AddIdentitySetup(identitySettings)
+                .AddDefaultTokenProviders();
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Identity.Mongo.Tokens
+namespace AspNetCore.Identity.Mongo.Jwt
 {
     public static class JwtBuilder
     {

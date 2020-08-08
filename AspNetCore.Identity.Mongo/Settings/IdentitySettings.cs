@@ -2,7 +2,7 @@
 {
     public class IdentitySettings
     {
-        public bool UseJwtTokens { get; set; } = false;
         public bool RequireConfirmedPhoneNumber { get; set; } = false;
+        public bool RequireConfirmedEmail { get; set; } = true;
     }
 }

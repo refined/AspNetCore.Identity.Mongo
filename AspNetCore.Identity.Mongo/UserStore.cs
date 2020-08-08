@@ -229,7 +229,7 @@ namespace AspNetCore.Identity.Mongo
 
         public async Task SetEmailAsync(IdentityUserEntity user, string email, CancellationToken cancellationToken)
         {
-            await SetNormalizedEmailAsync(user, _normalizer.Normalize(user.Email), cancellationToken);
+            await SetNormalizedEmailAsync(user, _normalizer.NormalizeEmail(user.Email), cancellationToken);
 
             var updatedUser = await _userRepository.UpdateAsync(_ => _.Id == user.Id, entity => entity.Email, email, cancellationToken);
             user.Email = updatedUser?.Email ?? email;
