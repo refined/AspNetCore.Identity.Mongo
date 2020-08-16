@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Mongo",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Mongo.Tests", "AspNetCore.Identity.Mongo.Tests\AspNetCore.Identity.Mongo.Tests.csproj", "{85778BF6-B8EB-4FB8-B708-CFF6D94B8549}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Identity.Mongo.Jwt", "AspNetCore.Identity.Mongo.Jwt\AspNetCore.Identity.Mongo.Jwt.csproj", "{D1024D57-1406-4F02-A93A-6DFED9ECB79F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Mongo.Jwt", "AspNetCore.Identity.Mongo.Jwt\AspNetCore.Identity.Mongo.Jwt.csproj", "{D1024D57-1406-4F02-A93A-6DFED9ECB79F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Mongo.Mvc", "AspNetCore.Identity.Mongo.Mvc\AspNetCore.Identity.Mongo.Mvc.csproj", "{231B27FE-0880-4F38-BA69-A961C1AB772A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D1024D57-1406-4F02-A93A-6DFED9ECB79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1024D57-1406-4F02-A93A-6DFED9ECB79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1024D57-1406-4F02-A93A-6DFED9ECB79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{231B27FE-0880-4F38-BA69-A961C1AB772A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231B27FE-0880-4F38-BA69-A961C1AB772A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231B27FE-0880-4F38-BA69-A961C1AB772A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231B27FE-0880-4F38-BA69-A961C1AB772A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

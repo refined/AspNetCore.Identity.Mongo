@@ -1,6 +1,6 @@
 ﻿using AspNetCore.Identity.Mongo.Entities;
+using AspNetCore.Identity.Mongo.Settings;
 using MongoDB.Driver;
-using Novikov.MongoRepository;
 
 namespace AspNetCore.Identity.Mongo.Repository
 {

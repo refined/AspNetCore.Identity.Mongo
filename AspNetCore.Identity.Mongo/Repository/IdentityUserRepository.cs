@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Novikov.MongoRepository;
+﻿using AspNetCore.Identity.Mongo.Settings;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCore.Identity.Mongo.Repository
 {

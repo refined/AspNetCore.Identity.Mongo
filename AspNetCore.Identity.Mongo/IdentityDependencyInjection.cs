@@ -6,7 +6,6 @@ using AspNetCore.Identity.Mongo.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Novikov.MongoRepository;
 
 namespace AspNetCore.Identity.Mongo
 {

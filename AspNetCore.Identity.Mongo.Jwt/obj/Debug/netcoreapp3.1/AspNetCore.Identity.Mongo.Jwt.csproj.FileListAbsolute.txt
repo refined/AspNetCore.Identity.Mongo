@@ -1,9 +1,0 @@
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\bin\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.deps.json
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\bin\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.dll
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.csprojAssemblyReference.cache
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.AssemblyInfoInputs.cache
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.AssemblyInfo.cs
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\bin\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.pdb
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.dll
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.pdb
-C:\Development\ShareTravel\AspNetCore.Identity.Mongo\AspNetCore.Identity.Mongo.Jwt\obj\Debug\netcoreapp3.1\AspNetCore.Identity.Mongo.Jwt.csproj.CoreCompileInputs.cache
