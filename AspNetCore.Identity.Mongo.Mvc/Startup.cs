@@ -26,6 +26,7 @@ namespace AspNetCore.Identity.Mongo.Mvc
                 //.AddMapper(_configuration)
                 //.AddRepositories(_configuration)
                 //.AddServices(_configuration)
+                .AddDefaultUserIdentityStores()
                 .AddDefaultIdentitySetup(_configuration)
                 .AddDefaultUI();
             services
@@ -49,6 +50,7 @@ namespace AspNetCore.Identity.Mongo.Mvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app
                 .UseHttpsRedirection()
                 .UseStaticFiles()
@@ -63,15 +65,14 @@ namespace AspNetCore.Identity.Mongo.Mvc
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
+                })
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapRazorPages();
                 });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
 
 
             logger.LogInformation("Web MVC started");

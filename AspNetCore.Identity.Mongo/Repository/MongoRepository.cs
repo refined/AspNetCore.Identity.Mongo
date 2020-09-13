@@ -80,26 +80,36 @@ namespace AspNetCore.Identity.Mongo.Repository
             return Find(searchExpression).ToList();
         }
 
-        public async Task SaveAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.UpdatedDate = DateTime.UtcNow;
+            await Collection
+                .InsertOneAsync(entity, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            entity.UpdatedDate = DateTime.UtcNow;
+            await Collection
+                .ReplaceOneAsync(
+                    Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
+                    entity,
+                    new ReplaceOptions { IsUpsert = true },
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task SaveAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity.IsTransient())
             {
-                entity.CreatedDate = DateTime.UtcNow;
-                entity.UpdatedDate = DateTime.UtcNow;
-                await Collection
-                    .InsertOneAsync(entity, cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+                await InsertAsync(entity, cancellationToken);
             }
             else
             {
-                entity.UpdatedDate = DateTime.UtcNow;
-                await Collection
-                    .ReplaceOneAsync(
-                        Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
-                        entity,
-                        new ReplaceOptions { IsUpsert = true },
-                        cancellationToken)
-                    .ConfigureAwait(false);
+                await UpdateAsync(entity, cancellationToken);
             }
         }
 

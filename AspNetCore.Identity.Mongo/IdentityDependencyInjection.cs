@@ -65,13 +65,19 @@ namespace AspNetCore.Identity.Mongo
                 })
             .AddIdentityCookies(o => { });
 
-            return services
-                .AddRepositories()
-                .AddTransient<IIdentityRepository<IdentityUserEntity>, IdentityUserRepository>()
+           return services
                 .AddTransient<ILookupNormalizer, UpperInvariantLookupNormalizer>()
-                .AddTransient<IUserStore<IdentityUserEntity>, UserStore>()
                 .AddIdentitySetup(identitySettings)
                 .AddDefaultTokenProviders();
+        }
+
+        public static IServiceCollection AddDefaultUserIdentityStores(this IServiceCollection services)
+        {
+            return services
+                .AddRepositoriesBsonMapper()
+                .AddTransient<IIdentityRepository<IdentityUserEntity>, IdentityUserRepository>()
+                .AddTransient<ILookupNormalizer, UpperInvariantLookupNormalizer>()
+                .AddTransient<IUserStore<IdentityUserEntity>, UserStore>();
         }
     }
 }

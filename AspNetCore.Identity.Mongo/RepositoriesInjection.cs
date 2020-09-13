@@ -10,7 +10,7 @@ namespace AspNetCore.Identity.Mongo
 {
     public static class RepositoriesInjection
     {
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        public static IServiceCollection AddRepositoriesBsonMapper(this IServiceCollection services)
         {
             var conventionPack = new ConventionPack { new IgnoreExtraElementsConvention(true) };
             ConventionRegistry.Register("IgnoreExtraElements", conventionPack, type => true);
