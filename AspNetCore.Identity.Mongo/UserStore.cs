@@ -15,8 +15,6 @@ namespace AspNetCore.Identity.Mongo
         IUserPasswordStore<IdentityUserEntity>,
         IUserEmailStore<IdentityUserEntity>,
         IUserPhoneNumberStore<IdentityUserEntity>,
-        //IQueryableUserStore<IdentityUserEntity>,
-        //IUserTwoFactorStore<IdentityUserEntity>,
         IUserLockoutStore<IdentityUserEntity>,
         IUserAuthenticationTokenStore<IdentityUserEntity>
     {
@@ -30,34 +28,15 @@ namespace AspNetCore.Identity.Mongo
             _userRepository = userRepository;
             _normalizer = normalizer;
         }
-        
-        //public async Task<string> GetAuthenticatorKeyAsync(IdentityUserEntity user, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    return (await _userRepository.GetAsync(user.Id, cancellationToken))?.AuthenticatorKey ?? user.AuthenticatorKey;
-        //}
-
-        //public Task SetAuthenticatorKeyAsync(IdentityUserEntity user, string key, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    user.AuthenticatorKey = key;
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
         public async Task<IdentityResult> CreateAsync(IdentityUserEntity user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var u = await _userRepository.FirstOrDefaultAsync(_ => _.UserName == user.UserName, cancellationToken: cancellationToken);
             if (u != null) return IdentityResult.Failed(new IdentityError { Code = "Username already in use" });
+            u = await _userRepository.FirstOrDefaultAsync(_ => _.NormalizedEmail == user.NormalizedEmail, cancellationToken: cancellationToken);
+            if (u != null) return IdentityResult.Failed(new IdentityError { Code = "Email already in use" });
             
-            //if (user.Email != null)
-            //{
-            //    await SetEmailAsync(user, user.Email, cancellationToken);
-            //}
-
             await _userRepository.SaveAsync(user, cancellationToken);
 
             return IdentityResult.Success;
@@ -89,61 +68,10 @@ namespace AspNetCore.Identity.Mongo
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // await SetEmailAsync(user, user.Email, cancellationToken);
             await _userRepository.SaveAsync(user, cancellationToken);
             return IdentityResult.Success;
         }
-
-        //public Task AddClaimsAsync(IdentityUserEntity user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    if (user.Claims == null) user.Claims = new List<IdentityUserClaim<string>>();
-
-        //    user.Claims.AddRange(claims.Select(claim => new IdentityUserClaim<string>()
-        //    {
-        //        ClaimType = claim.Type,
-        //        ClaimValue = claim.Value
-        //    }));
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-        //public Task ReplaceClaimAsync(IdentityUserEntity user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    user?.Claims?.RemoveAll(x => x.ClaimType == claim.Type);
-
-        //    user?.Claims?.Add(new IdentityUserClaim<string>()
-        //    {
-        //        ClaimType = newClaim.Type,
-        //        ClaimValue = newClaim.Value
-        //    });
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-        //public Task RemoveClaimsAsync(IdentityUserEntity user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    foreach (var claim in claims)
-        //    {
-        //        user?.Claims?.RemoveAll(x => x.ClaimType == claim.Type);
-        //    }
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-        //public async Task<IList<IdentityUserEntity>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    return (await _userRepository.FindUsersByClaimAsync(claim.Type, claim.Value)).ToList();
-        //}
-
-   
+        
         public Task<string> GetNormalizedUserNameAsync(IdentityUserEntity user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -164,14 +92,6 @@ namespace AspNetCore.Identity.Mongo
 
             return Task.FromResult(user.UserName);
         }
-
-        //public async Task<IList<Claim>> GetClaimsAsync(IdentityUserEntity user, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    var dbUser = await _userRepository.GetAsync(user.Id, cancellationToken);
-        //    return dbUser?.Claims?.Select(x => new Claim(x.ClaimType, x.ClaimValue))?.ToList() ?? new List<Claim>();
-        //}
 
         public async Task SetNormalizedUserNameAsync(IdentityUserEntity user, string normalizedName, CancellationToken cancellationToken)
         {
@@ -396,51 +316,6 @@ namespace AspNetCore.Identity.Mongo
 
             return Task.FromResult(user?.Tokens?.FirstOrDefault(x => x.LoginProvider == loginProvider && x.Name == name)?.Value);
         }
-
-        //public Task AddToRoleAsync(IdentityUserEntity user, string roleName, CancellationToken cancellationToken)
-        //{
-        //    if (user.Roles == null) user.Roles = new List<string>();
-        //    user.Roles.Add(roleName);
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-        //public Task RemoveFromRoleAsync(IdentityUserEntity user, string roleName, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    user.Roles.Remove(roleName);
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-
-        //public async Task<IList<IdentityUserEntity>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    return (await _userRepository.FindUsersInRoleAsync(roleName)).ToList();
-        //}
-
-        //public async Task<IList<string>> GetRolesAsync(IdentityUserEntity user, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    return (await _userRepository.GetAsync(user.Id, cancellationToken))?.Roles
-        //           ?.Select(roleId => _roleCollection.FindByNameAsync(roleId).Result)
-        //           .Where(x => x != null)
-        //           .Select(x => x.Name)
-        //           .ToList() ?? new List<string>();
-        //}
-
-        //public async Task<bool> IsInRoleAsync(IdentityUserEntity user, string roleName, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    var dbUser = await _userRepository.GetAsync(user.Id, cancellationToken);
-        //    return dbUser?.Roles.Contains(roleName) ?? false;
-        //}
-
         public async Task<string> GetSecurityStampAsync(IdentityUserEntity user, CancellationToken cancellationToken)
         {
             return (await _userRepository.GetAsync(user.Id, cancellationToken))?.SecurityStamp ?? user.SecurityStamp;
@@ -451,56 +326,5 @@ namespace AspNetCore.Identity.Mongo
             var updatedUser = await _userRepository.UpdateAsync(_ => _.Id == user.Id, entity => entity.SecurityStamp, stamp, cancellationToken);
             user.SecurityStamp = updatedUser?.SecurityStamp ?? stamp;
         }
-
-        //public Task ReplaceCodesAsync(IdentityUserEntity user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    user.RecoveryCodes = recoveryCodes.Select(x => new TwoFactorRecoveryCode { Code = x, Redeemed = false })
-        //        .ToList();
-
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
-
-        //public async Task<bool> RedeemCodeAsync(IdentityUserEntity user, string code, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    var dbUser = await _userRepository.GetAsync(user.Id, cancellationToken);
-        //    if (dbUser == null) return false;
-
-        //    var c = user.RecoveryCodes.FirstOrDefault(x => x.Code == code);
-
-        //    if (c == null || c.Redeemed) return false;
-
-        //    c.Redeemed = true;
-
-        //    await _userRepository.SaveAsync(user, cancellationToken);
-
-        //    return true;
-        //}
-
-        //public async Task<int> CountCodesAsync(IdentityUserEntity user, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    var dbUser = await _userRepository.GetAsync(user.Id, cancellationToken);
-        //    return dbUser?.RecoveryCodes.Count ?? 0;
-        //}
-
-        //public async Task<bool> GetTwoFactorEnabledAsync(IdentityUserEntity user, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    return (await _userRepository.GetAsync(user.Id, cancellationToken))?.TwoFactorEnabled ?? user.TwoFactorEnabled;
-        //}
-
-        //public Task SetTwoFactorEnabledAsync(IdentityUserEntity user, bool enabled, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    user.TwoFactorEnabled = enabled;
-        //    return _userRepository.SaveAsync(user, cancellationToken);
-        //}
     }
 }

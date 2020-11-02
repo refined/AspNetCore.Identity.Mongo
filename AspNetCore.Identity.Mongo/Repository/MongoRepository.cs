@@ -15,9 +15,7 @@ namespace AspNetCore.Identity.Mongo.Repository
        where TEntity : class, IEntity<TIdentifier>
     {
         protected readonly IMongoCollection<TEntity> Collection;
-
-        public IMongoIndexManager<TEntity> Indexes => Collection.Indexes;
-
+        
         public MongoRepository(IOptions<MongoDbSettings> options, string collectionName = null) : this(options.Value, collectionName)
         {
         }
@@ -42,18 +40,6 @@ namespace AspNetCore.Identity.Mongo.Repository
         public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Find(searchExpression).FirstOrDefaultAsync(cancellationToken);
-        }
-
-        public Task<TEntity> UpdateAsync<TField>(
-            Expression<Func<TEntity, bool>> searchExpression,
-            Expression<Func<TEntity, TField>> fieldExpression,
-            TField fieldValue,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var updateDef = Builders<TEntity>.Update.Set(fieldExpression, fieldValue);
-            var filter = searchExpression;
-            var updateOptions = new FindOneAndUpdateOptions<TEntity> { ReturnDocument = ReturnDocument.After };
-            return Collection.FindOneAndUpdateAsync(filter, updateDef, updateOptions, cancellationToken);
         }
 
         public async Task<TEntity> GetAsync(TIdentifier id, CancellationToken cancellationToken = default(CancellationToken))
@@ -87,6 +73,18 @@ namespace AspNetCore.Identity.Mongo.Repository
             await Collection
                 .InsertOneAsync(entity, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
+        }
+
+        public Task<TEntity> UpdateAsync<TField>(
+            Expression<Func<TEntity, bool>> searchExpression,
+            Expression<Func<TEntity, TField>> fieldExpression,
+            TField fieldValue,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var updateDef = Builders<TEntity>.Update.Set(fieldExpression, fieldValue);
+            var filter = searchExpression;
+            var updateOptions = new FindOneAndUpdateOptions<TEntity> { ReturnDocument = ReturnDocument.After };
+            return Collection.FindOneAndUpdateAsync(filter, updateDef, updateOptions, cancellationToken);
         }
 
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)

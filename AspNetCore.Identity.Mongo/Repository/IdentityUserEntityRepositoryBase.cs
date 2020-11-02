@@ -16,6 +16,15 @@ namespace AspNetCore.Identity.Mongo.Repository
                 new CreateIndexModel<IdentityUserEntity>(
                     Builders<IdentityUserEntity>.IndexKeys.Ascending(a => a.NormalizedUserName),
                     new CreateIndexOptions {Background = true, Unique = true}),
+                new CreateIndexModel<IdentityUserEntity>(
+                    Builders<IdentityUserEntity>.IndexKeys.Ascending(a => a.Email),
+                    new CreateIndexOptions {Background = true, Unique = true}),
+                new CreateIndexModel<IdentityUserEntity>(
+                    Builders<IdentityUserEntity>.IndexKeys.Ascending(a => a.NormalizedEmail),
+                    new CreateIndexOptions {Background = true, Unique = true}),
+                new CreateIndexModel<IdentityUserEntity>(
+                    Builders<IdentityUserEntity>.IndexKeys.Ascending(a => a.PhoneNumber),
+                    new CreateIndexOptions {Background = true, Unique = true}),
             });
         }
     }
