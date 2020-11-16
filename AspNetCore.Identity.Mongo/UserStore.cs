@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Entities;
 using AspNetCore.Identity.Mongo.Repository;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
 
 namespace AspNetCore.Identity.Mongo
 {
@@ -36,7 +37,8 @@ namespace AspNetCore.Identity.Mongo
             if (u != null) return IdentityResult.Failed(new IdentityError { Code = "Username already in use" });
             u = await _userRepository.FirstOrDefaultAsync(_ => _.NormalizedEmail == user.NormalizedEmail, cancellationToken: cancellationToken);
             if (u != null) return IdentityResult.Failed(new IdentityError { Code = "Email already in use" });
-            
+
+            user.Id = ObjectId.GenerateNewId().ToString(); // replace base Microsoft.AspNetCore.Identity, because we need valid MongoID
             await _userRepository.SaveAsync(user, cancellationToken);
 
             return IdentityResult.Success;

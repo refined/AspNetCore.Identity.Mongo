@@ -16,6 +16,6 @@ namespace AspNetCore.Identity.Mongo.Repository
         Task DeleteAsync(string userId, CancellationToken cancellationToken);
 
         Task<TEntity> UpdateAsync<TField>(Expression<Func<TEntity, bool>> searchExpression, Expression<Func<TEntity, TField>> fieldExpression, 
-            TField fieldValue, CancellationToken cancellationToken = default(CancellationToken));
+            TField fieldValue, CancellationToken cancellationToken = default);
     }
 }

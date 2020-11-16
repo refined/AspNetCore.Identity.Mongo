@@ -37,12 +37,12 @@ namespace AspNetCore.Identity.Mongo.Repository
         }
 
 
-        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default)
         {
             return Find(searchExpression).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<TEntity> GetAsync(TIdentifier id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TEntity> GetAsync(TIdentifier id, CancellationToken cancellationToken = default)
         {
             return await Collection.Find(x => x.Id.Equals(id))
                 .FirstOrDefaultAsync(cancellationToken)
@@ -54,7 +54,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             return Collection.Find(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IReadOnlyCollection<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default)
         {
             return await Find(searchExpression)
                 .ToListAsync(cancellationToken)
@@ -79,7 +79,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             Expression<Func<TEntity, bool>> searchExpression,
             Expression<Func<TEntity, TField>> fieldExpression,
             TField fieldValue,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var updateDef = Builders<TEntity>.Update.Set(fieldExpression, fieldValue);
             var filter = searchExpression;
@@ -90,7 +90,7 @@ namespace AspNetCore.Identity.Mongo.Repository
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             entity.UpdatedDate = DateTime.UtcNow;
-            await Collection
+            var result = await Collection
                 .ReplaceOneAsync(
                     Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
                     entity,
@@ -129,7 +129,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             }
         }
 
-        public async Task DeleteAsync(TIdentifier id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task DeleteAsync(TIdentifier id, CancellationToken cancellationToken = default)
         {
             await Collection
                 .DeleteOneAsync(x => x.Id.Equals(id), cancellationToken)
@@ -141,7 +141,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             Collection.DeleteOne(x => x.Id.Equals(id));
         }
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> searchExpression, CancellationToken cancellationToken = default)
         {
             var count = await Find(searchExpression)
                 .CountDocumentsAsync(cancellationToken)
@@ -156,7 +156,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             return (int)count;
         }
 
-        public async Task BulkInsertAsync(ICollection<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task BulkInsertAsync(ICollection<TEntity> entities, CancellationToken cancellationToken = default)
         {
             foreach (var entity in entities)
             {
@@ -180,7 +180,7 @@ namespace AspNetCore.Identity.Mongo.Repository
             Collection.InsertMany(entities);
         }
 
-        public async Task BulkUpsertAsync(ICollection<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task BulkUpsertAsync(ICollection<TEntity> entities, CancellationToken cancellationToken = default)
         {
             var operations = entities.Select(entity =>
             {

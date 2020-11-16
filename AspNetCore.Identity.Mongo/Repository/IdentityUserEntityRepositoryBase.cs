@@ -24,7 +24,7 @@ namespace AspNetCore.Identity.Mongo.Repository
                     new CreateIndexOptions {Background = true, Unique = true}),
                 new CreateIndexModel<IdentityUserEntity>(
                     Builders<IdentityUserEntity>.IndexKeys.Ascending(a => a.PhoneNumber),
-                    new CreateIndexOptions {Background = true, Unique = true}),
+                    new CreateIndexOptions {Background = true, Unique = false, Version = 1}),
             });
         }
     }

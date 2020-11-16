@@ -8,7 +8,7 @@ namespace AspNetCore.Identity.Mongo.Entities
     {
         public bool IsTransient()
         {
-            return CreatedDate == default(DateTime);
+            return CreatedDate == default;
         }
 
         public DateTime CreatedDate { get; set; }
